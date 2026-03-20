@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Botão SharePoint</title>
+    <style>
+        .btn-automacao {
+            background-color: #0078d4; /* Cor padrão SharePoint */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+        }
+        .btn-automacao:hover { background-color: #106ebe; }
+    </style>
+</head>
+<body>
+
+    <button id="meuBotao" class="btn-automacao">Registrar Ação na Planilha</button>
+
+    <script>
+        // class: ScriptWebApp
+        // def: sendDataToGoogle()
+        
+        const btn = document.getElementById('meuBotao');
+        
+        // ATENÇÃO: Cole a sua URL gerada no Google Apps Script (que termina em /exec) aqui:
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGmNlFBFcmUV3vs-8vZCeqmnziqktYq-bPoAKR0HzX6ljIOf2qh7wKBF-iVlZdjNhc_A/exec';
+
+        btn.addEventListener('click', () => {
+            // Muda o visual do botão para mostrar que está processando
+            btn.innerText = "Enviando...";
+            btn.disabled = true;
+
+            // Dados que vão para a planilha
+            const payload = {
+                usuario: "Usuário SharePoint",
+                acao: "Clique no Botão de Automação"
+            };
+
+            // Envio direto sem forçar cabeçalhos complexos para evitar bloqueio (CORS)
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            }).then(response => {
+                // Se a requisição foi feita sem estourar erro no navegador, deu certo
+                alert("Comando enviado! Verifique a planilha.");
+                btn.innerText = "Registrar Ação na Planilha";
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("Erro na comunicação:", err);
+                alert("Falha ao enviar. Verifique o console do navegador.");
+                btn.innerText = "Registrar Ação na Planilha";
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
